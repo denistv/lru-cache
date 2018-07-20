@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-const ElementNotFound = -1
+const elementNotFound = -1
 
 func NewLRU(capacity int) (LRU, error) {
 	if capacity <= 0 {
@@ -45,7 +45,7 @@ func (l *LRU) Get(key int) int {
 		return element.Value.(int)
 	}
 
-	return ElementNotFound
+	return elementNotFound
 }
 
 func (l *LRU) removeOldest() {

@@ -3,6 +3,7 @@ package cache
 import (
 	"container/list"
 	"errors"
+	"sync"
 )
 
 const elementNotFound = -1
@@ -16,16 +17,21 @@ func NewLRU(capacity int) (LRU, error) {
 		capacity: capacity,
 		list:     list.New(),
 		elements: make(map[int]*list.Element),
+		mu:       sync.Mutex{},
 	}, nil
 }
 
 type LRU struct {
+	mu       sync.Mutex
 	capacity int
 	list     *list.List
 	elements map[int]*list.Element
 }
 
 func (l *LRU) Put(key int, value int) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
 	element := l.elements[key]
 
 	if element == nil {
@@ -39,6 +45,9 @@ func (l *LRU) Put(key int, value int) {
 }
 
 func (l *LRU) Get(key int) int {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
 	if element, ok := l.elements[key]; ok {
 		l.list.MoveToFront(element)
 

@@ -19,8 +19,10 @@ Process finished with exit code 0
 --- PASS: TestLRU (0.00s)
 === RUN   TestLRU_StorageBug
 --- PASS: TestLRU_StorageBug (0.00s)
+=== RUN   TestLRU_ConcurrentWrite
+--- PASS: TestLRU_ConcurrentWrite (0.00s)
 PASS
-ok      lru-cache/cache 0.007s
+ok      lru-cache/cache 0.010s
 
 Process finished with exit code 0
 ```

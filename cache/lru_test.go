@@ -66,3 +66,19 @@ func TestLRU_StorageBug(t *testing.T) {
 		t.Error("333 expected")
 	}
 }
+
+// При попытке конкурентной записи в map без синхронизации поймаем фатал
+func TestLRU_ConcurrentWrite(t *testing.T) {
+	goCount := 100
+	size := 10
+
+	lru, _ := NewLRU(size)
+
+	put := func(val int) {
+		lru.Put(val, val)
+	}
+
+	for i := 0; i < goCount; i++ {
+		go put(i)
+	}
+}

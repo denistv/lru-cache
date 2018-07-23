@@ -16,27 +16,33 @@ func NewLRU(capacity int) (LRU, error) {
 	return LRU{
 		capacity: capacity,
 		list:     list.New(),
-		elements: make(map[int]*list.Element),
+		items:    make(map[int]*list.Element),
 		mu:       sync.Mutex{},
 	}, nil
+}
+
+type Item struct {
+	key   int
+	value int
 }
 
 type LRU struct {
 	mu       sync.Mutex
 	capacity int
 	list     *list.List
-	elements map[int]*list.Element
+	items    map[int]*list.Element
 }
 
 func (l *LRU) Put(key int, value int) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	element := l.elements[key]
+	el := l.items[key]
 
-	if element == nil {
-		element = l.list.PushFront(key)
-		l.elements[key] = element
+	if el == nil {
+		item := &Item{key, value}
+		el = l.list.PushFront(item)
+		l.items[key] = el
 	}
 
 	if l.list.Len() > l.capacity {
@@ -48,10 +54,11 @@ func (l *LRU) Get(key int) int {
 	l.mu.Lock()
 	defer l.mu.Unlock()
 
-	if element, ok := l.elements[key]; ok {
+	if element, ok := l.items[key]; ok {
 		l.list.MoveToFront(element)
+		item := element.Value.(*Item)
 
-		return element.Value.(int)
+		return item.value
 	}
 
 	return elementNotFound
@@ -61,7 +68,8 @@ func (l *LRU) removeOldest() {
 	back := l.list.Back()
 
 	if back != nil {
-		l.list.Remove(back)
-		delete(l.elements, back.Value.(int))
+		elem := l.list.Remove(back)
+		item := elem.(*Item)
+		delete(l.items, item.key)
 	}
 }

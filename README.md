@@ -13,11 +13,14 @@ Process finished with exit code 0
 
 ### Tests
 ```
-=== RUN   TestLRU
---- PASS: TestLRU (0.00s)
 === RUN   TestNewLRU
 --- PASS: TestNewLRU (0.00s)
+=== RUN   TestLRU
+--- PASS: TestLRU (0.00s)
+=== RUN   TestLRU_StorageBug
+--- PASS: TestLRU_StorageBug (0.00s)
 PASS
+ok      lru-cache/cache 0.007s
 
 Process finished with exit code 0
 ```

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"lru/cache"
+	"lru-cache/cache"
 )
 
 func main() {

@@ -51,3 +51,18 @@ func TestLRU(t *testing.T) {
 		t.Error("4 expected")
 	}
 }
+
+func TestLRU_StorageBug(t *testing.T) {
+	lru, _ := NewLRU(2)
+
+	lru.Put(1, 111)
+	lru.Put(2, 222)
+	lru.Put(3, 333)
+
+	expected := 333
+	actual := lru.Get(3)
+
+	if actual != expected {
+		t.Error("333 expected")
+	}
+}
